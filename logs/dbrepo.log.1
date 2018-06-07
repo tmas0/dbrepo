@@ -1,0 +1,106 @@
+2018-06-07 14:42:17,531 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 14:42:20,313 ERROR: Exception on /index [GET] [in /home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/tmas/workspace/dbrepo/app/main/routes.py", line 25, in index
+    business=business, prev_url=prev_url)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 869, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 830, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 804, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/loaders.py", line 113, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 58, in get_source
+    return self._get_source_fast(environment, template)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 86, in _get_source_fast
+    raise TemplateNotFound(template)
+TemplateNotFound: index.html
+2018-06-07 15:31:03,758 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:31:03,794 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:31:03,896 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:31:03,962 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:31:18,183 ERROR: Exception on /index [GET] [in /home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/tmas/workspace/dbrepo/app/main/routes.py", line 25, in index
+    business=business, prev_url=prev_url)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 869, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 830, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 804, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/loaders.py", line 113, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 58, in get_source
+    return self._get_source_fast(environment, template)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 86, in _get_source_fast
+    raise TemplateNotFound(template)
+TemplateNotFound: index.html
+2018-06-07 15:32:58,417 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:32:58,458 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:32:58,468 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:32:58,514 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:33:03,646 ERROR: Exception on /index [GET] [in /home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/tmas/workspace/dbrepo/app/main/routes.py", line 25, in index
+    business=business, prev_url=prev_url)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 869, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 830, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 804, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/loaders.py", line 113, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 58, in get_source
+    return self._get_source_fast(environment, template)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 86, in _get_source_fast
+    raise TemplateNotFound(template)
+TemplateNotFound: index.html
+2018-06-07 15:34:48,483 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:34:48,552 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:34:48,676 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-07 15:34:48,727 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
