@@ -2,8 +2,9 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, request, current_app
 from flask_login import current_user, login_required
 from app import db
-from app.models import User, Business
+from app.models import User, Business, Cluster
 from app.main import bp
+from sqlalchemy import select
 
 
 @bp.before_app_request
@@ -18,7 +19,9 @@ def before_request():
 @login_required
 def index():
     page = request.args.get('page', 1, type=int)
-    business = Business.query.all()
+    print(Business.query.outerjoin(Cluster).order_by(Business.name.asc()).add_entity(Cluster))
+    business = business.get_clusters()
+    print(business)
     next_url = None
     prev_url = None
     return render_template('index.html', title='Home', next_url=next_url,
