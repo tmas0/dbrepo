@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.models import User, Business, Cluster
 from app.main import bp
-from sqlalchemy import select
+from sqlalchemy import text
 
 
 @bp.before_app_request
@@ -19,10 +19,15 @@ def before_request():
 @login_required
 def index():
     page = request.args.get('page', 1, type=int)
-    print(Business.query.outerjoin(Cluster).order_by(Business.name.asc()).add_entity(Cluster))
-    business = business.get_clusters()
-    print(business)
+    sql = text("SELECT c.name as cluster, d.name as database, bh.timecreated, bh.state, bh.info"
+    " FROM dba.database d"
+    " LEFT JOIN dba.deployment dp ON dp.database_id = d.id AND dp.environment_id = 1"
+    " LEFT JOIN dba.cluster c ON dp.cluster_id = c.id"
+    " LEFT JOIN dba.backup_history bh ON d.id = bh.database_id AND c.id = bh.cluster_id AND bh.timecreated > current_date - interval '3' day"
+    " ORDER BY bh.timecreated DESC")
+    print(sql)
+    backups = db.engine.execute(sql)
     next_url = None
     prev_url = None
     return render_template('index.html', title='Home', next_url=next_url,
-                           business=business, prev_url=prev_url)
+                           backups=backups, prev_url=prev_url)

@@ -2,18 +2,25 @@
 
 {% block content %}
     <div class="table-responsive">
-        <table class="table table-striped table-bordered">
+        <table class="table">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Business</th>
                     <th scope="col">Cluster</th>
+                    <th scope="col">Database</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Info</th>
                 </tr>
             </thead>
             <tbody>
-                {% for b in business %}
-                    {{ b|pprint }}
-                    <tr><th scope="row">{{ b.dba_business_id }}</th><td>{{ b.dba_business_name }}</td><td>{{ b.dba_cluster_name }}</td></tr>
+                {% for b in backups %}
+                    {% if b.state == True %}
+                        <tr class="table-success">
+                    {% else %}
+                        <tr class="table-danger">
+                    {% endif %}
+                    <th scope="row">{{b.timecreated }}</th><td>{{ b.cluster }}</td><td>{{ b.database }}</td><td>{{ b.state }}</td><td>{{ b.info }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
