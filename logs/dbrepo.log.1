@@ -1,0 +1,118 @@
+2018-06-22 08:03:36,276 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-22 08:03:36,280 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-22 08:03:36,307 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-06-22 08:03:36,377 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:04:42,795 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:04:42,795 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:04:42,833 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:04:42,865 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:15:36,330 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:15:36,409 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:15:36,497 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:15:36,567 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:52]
+2018-07-06 13:15:40,381 ERROR: Exception on / [GET] [in /home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/tmas/workspace/dbrepo/app/main/routes.py", line 33, in index
+    backups=backups, prev_url=prev_url)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 135, in render_template
+    context, ctx.app)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 117, in _render
+    rv = template.render(context)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/app/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/tmas/workspace/dbrepo/app/templates/base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 4, in block "doc"
+    {%- block html %}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 20, in block "html"
+    {% block body -%}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 21, in block "body"
+    {% block navbar %}
+  File "/home/tmas/workspace/dbrepo/app/templates/base.html", line 24, in block "navbar"
+    <li><a href="{{ url_for('business.index') }}">Business</a></li>
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/helpers.py", line 356, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2061, in handle_url_build_error
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/helpers.py", line 345, in url_for
+    force_external=external)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/werkzeug/routing.py", line 1776, in build
+    raise BuildError(endpoint, values, method, self)
+BuildError: Could not build url for endpoint 'business.index'. Did you mean 'main.index' instead?
+2018-07-06 13:16:45,404 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:16:45,426 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:16:45,472 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:16:45,511 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:16:48,499 ERROR: Exception on / [GET] [in /home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/tmas/workspace/dbrepo/app/main/routes.py", line 33, in index
+    backups=backups, prev_url=prev_url)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 135, in render_template
+    context, ctx.app)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/templating.py", line 117, in _render
+    rv = template.render(context)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/app/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/tmas/workspace/dbrepo/app/templates/base.html", line 1, in top-level template code
+    {% extends 'bootstrap/base.html' %}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 1, in top-level template code
+    {% block doc -%}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 4, in block "doc"
+    {%- block html %}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 20, in block "html"
+    {% block body -%}
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 21, in block "body"
+    {% block navbar %}
+  File "/home/tmas/workspace/dbrepo/app/templates/base.html", line 24, in block "navbar"
+    <li><a href="{{ url_for('business.index') }}">Business</a></li>
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/helpers.py", line 356, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/app.py", line 2061, in handle_url_build_error
+    reraise(exc_type, exc_value, tb)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/flask/helpers.py", line 345, in url_for
+    force_external=external)
+  File "/home/tmas/workspace/dbrepo/venv/local/lib/python2.7/site-packages/werkzeug/routing.py", line 1776, in build
+    raise BuildError(endpoint, values, method, self)
+BuildError: Could not build url for endpoint 'business.index'. Did you mean 'main.index' instead?
+2018-07-06 13:17:57,831 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:17:57,920 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:17:57,995 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:17:58,048 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:32:22,835 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:32:22,856 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:32:22,935 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
+2018-07-06 13:32:22,996 INFO: Database Repository startup [in /home/tmas/workspace/dbrepo/app/__init__.py:55]
