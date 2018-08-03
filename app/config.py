@@ -12,3 +12,5 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     DATABASE_SCHEMA = 'dba'
+
+    ROWS_PER_PAGE = 20
