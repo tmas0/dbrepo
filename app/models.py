@@ -321,6 +321,13 @@ class BackupHistory(db.Model):
         nullable=True
     )
 
+    def get_backup_history(self, diffdays=0, page=1, per_page=20):
+        query(Cluster.name, Database.name, BackupHistory.timecreated, BackupHistory.state, BackupHistory.info).\
+            join(Deployment.database_id).\
+            join(Cluster, Deployment.cluster_id==Cluster.id).\
+            outerjoin(BackupHistory, and_(Database.id==BackupHistory.database_id, Cluster.id==BackupHistory.cluster_id)).\
+            filter(BackupHistory.id==None)
+
 
 class RecoveryHistory(db.Model):
     """
