@@ -6,21 +6,21 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <form action="" method="post" class="form-signin">
+    <form class="form-signin" action="" method="post">
         <h2 class="form-signin-heading">Please Sign In</h2>
         {{ form.hidden_tag() }}
-        {{ form.username.label }}
-        {{ form.username(size=32) }}<br>
+        {{ form.username.label(class_="sr-only") }}
+        {{ form.username(size=32,class_="form-control",placeholder="Email address") }}<br>
             {% for error in form.username.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        {{ form.password.label }}
-        {{ form.password(size=32) }}
+        {{ form.password.label(class_="sr-only") }}
+        {{ form.password(size=32,class_="form-control",placeholder="Password") }}
             {% for error in form.password.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         {{ form.remember_me() }} {{ form.remember_me.label }}
-        {{ form.submit() }}
+        {{ form.submit(class_="btn btn-lg btn-primary btn-block") }}
     </form>
 </div>
 {% endblock %}
