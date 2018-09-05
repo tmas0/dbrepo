@@ -19,14 +19,16 @@ def before_request():
 @login_required
 def index():
     page = request.args.get('page', 1, type=int)
+    per_page = 20
     sql = text("SELECT c.name as cluster, d.name as database, bh.timecreated, bh.state, bh.info"
     " FROM dba.database d"
-    " LEFT JOIN dba.deployment dp ON dp.database_id = d.id AND dp.environment_id = 1"
-    " LEFT JOIN dba.cluster c ON dp.cluster_id = c.id"
-    " LEFT JOIN dba.backup_history bh ON d.id = bh.database_id AND c.id = bh.cluster_id AND bh.timecreated > current_date - interval '3' day"
+    " INNER JOIN dba.deployment dp ON dp.database_id = d.id AND dp.environment_id = 1"
+    " INNER JOIN dba.cluster c ON dp.cluster_id = c.id"
+    " LEFT JOIN dba.backup_history bh ON d.id = bh.database_id AND c.id = bh.cluster_id AND bh.timecreated::date = current_date - interval '3' day"
+    " WHERE bh.id is null "
     " ORDER BY bh.timecreated DESC")
     print(sql)
-    backups = db.engine.execute(sql)
+    backups = db.engine.execute(sql).paginate(page, per_page, False)
     next_url = None
     prev_url = None
     return render_template('index.html', title='Home', next_url=next_url,

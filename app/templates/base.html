@@ -4,7 +4,12 @@
     {% if title %}{{ title }} - Database Repository{% else %}Welcome to Database Repository{% endif %}
 {% endblock %}
 
+{% block head %}
+{{ super() }}
+{% endblock %}
+
 {% block navbar %}
+{{ super() }}
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -39,6 +44,7 @@
 {% endblock %}
 
 {% block content %}
+{{ super() }}
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}

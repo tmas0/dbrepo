@@ -33,18 +33,30 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/database', methods=['GET', 'POST'])
+@bp.route('/database', methods=['GET'])
 @login_required
 def index():
-    page = request.args.get('page', 1, type=int)
-    databases = Database.query.order_by("id").paginate(
-        page, current_app.config['ROWS_PER_PAGE'], False)
-    next_url = url_for('database.index', page=databases.next_num) \
-        if databases.has_next else None
-    prev_url = url_for('database.index', page=databases.prev_num) \
-        if databases.has_prev else None
+    databases = Database.query.order_by(Database.id.desc()).all()
+
+    db = Database()
+    columns = db.serialize_columns()
+
+    dbs = []
+    for db in databases:
+        dbs.append(db.as_dict())
+
     base_url = url_for('database.index')
     return render_template('database.html', title='Databases',
-                           next_url=next_url, databases=databases,
-                           prev_url=prev_url, base_url=base_url,
-                           page=page)
+                           databases=dbs, columns=columns,
+                           base_url=base_url,
+                           per_page=current_app.config['ROWS_PER_PAGE'])
+
+
+@bp.route('/database/update', methods=['POST'])
+@login_required
+def update():
+    print(request.form)
+    database_id = request.form['pk']
+    database = Database.query.filter_by(id=database_id).first_or_404()
+    print(database)
+    return

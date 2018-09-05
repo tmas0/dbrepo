@@ -193,6 +193,19 @@ class Database(db.Model):
         nullable=False
     )
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name != 'id' and c.name != 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'text', 'title': 'Set database name', 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
+
 
 class Environment(db.Model):
     """
