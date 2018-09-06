@@ -18,13 +18,14 @@
 
 
 from datetime import datetime
-from flask import render_template, redirect, url_for, request, current_app
+from flask import render_template, redirect, url_for, request, current_app, flash
 from flask_login import current_user, login_required
 from app import db
 from app.models import Database
 from app.database import bp
 from math import ceil
 
+from pprint import pprint
 
 @bp.before_app_request
 def before_request():
@@ -55,8 +56,20 @@ def index():
 @bp.route('/database/update', methods=['POST'])
 @login_required
 def update():
-    print(request.form)
     database_id = request.form['pk']
     database = Database.query.filter_by(id=database_id).first_or_404()
-    print(database)
-    return
+    if database is None:
+        flash('Database %(database_id)s not found', database_id=request.form['pk'])
+    else:
+        key = request.form['name']
+        value = request.form['value']
+        if key == 'active':
+            if value == 'true':
+                value = 1
+            else:
+                value = 0
+        setattr(database, key, value)
+        db.session.commit()
+        return 'Row modified'
+
+    return 'Row not modified'

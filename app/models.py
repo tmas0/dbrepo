@@ -200,7 +200,9 @@ class Database(db.Model):
         meta = []
         for c in self.__table__.columns:
             if c.name != 'id' and c.name != 'active':
-                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'text', 'title': 'Set database name', 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'text', 'title': 'Set database name', 'ajaxOptions': {'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'source': '[{value: false, text: "false"}, {value: true, text: "true"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
             else:
                 meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
 
