@@ -13,6 +13,9 @@
                         <button id="remove" class="btn btn-danger" disabled>
                             <i class="glyphicon glyphicon-remove"></i> Delete
                         </button>
+                        <button id="addnew" class="btn btn-success">
+                            <i class="glyphicon glyphicon-plus"></i> Add New
+                        </button>
                 </div>
                 <table id="table"
                        class="table table-sm table-striped table-bordered table-hover"
@@ -50,6 +53,24 @@
         });
       });
       $('th').attr('data-editable', 'true');
+    });
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+      var actions = $("#table td:last-child").html();
+      // Append table with add row form on add new button click
+      $("#addnew").click(function(){
+        $(this).attr("disabled", "disabled");
+        var index = $("#table tbody tr:last-child").index();
+            var row = '<tr>' +
+                '<td><input type="text" class="form-control" name="name" id="name"></td>' +
+                '<td></td>' +
+                '<td></td>'
+          '<td>' + actions + '</td>' +
+            '</tr>';
+          $("#table").append(row);   
+        $("#table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     });
 </script>
 {% endblock %}
