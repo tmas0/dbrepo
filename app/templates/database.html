@@ -13,7 +13,7 @@
                         <button id="remove" class="btn btn-danger" disabled>
                             <i class="glyphicon glyphicon-remove"></i> Delete
                         </button>
-                        <button id="addnew" class="btn btn-success">
+                        <button id="addnew" class="btn btn-success" data-toggle="modal" data-target="#modaladdnew">
                             <i class="glyphicon glyphicon-plus"></i> Add New
                         </button>
                 </div>
@@ -30,6 +30,38 @@
                        data-id-field="id"
                        data-editable-url="{{ base_url }}/update">
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modaladdnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Add new database</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="addnewdb">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" data-error="wrong" data-success="right" for="form3">Name</label>
+                            <div class="col-md-9">
+                                <input type="text" id="dbname" class="form-control validate" name="dbname">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" data-error="wrong" data-success="right" for="form2">Active</label>
+                            <label class="control-label col-md-3 radio-inline"><input type="radio" name="optradio" checked>Yes</label>
+                            <label class="control-label col-md-3 radio-inline"><input type="radio" name="optradio">No</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Add <i class="fa fa-paper-plane-o ml-1"></i></button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel <i class="fa fa-paper-plane-o ml-1"></i></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -53,24 +85,6 @@
         });
       });
       $('th').attr('data-editable', 'true');
-    });
-    $(document).ready(function() {
-      $('[data-toggle="tooltip"]').tooltip();
-      var actions = $("#table td:last-child").html();
-      // Append table with add row form on add new button click
-      $("#addnew").click(function(){
-        $(this).attr("disabled", "disabled");
-        var index = $("#table tbody tr:last-child").index();
-            var row = '<tr>' +
-                '<td><input type="text" class="form-control" name="name" id="name"></td>' +
-                '<td></td>' +
-                '<td></td>'
-          '<td>' + actions + '</td>' +
-            '</tr>';
-          $("#table").append(row);   
-        $("#table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-            $('[data-toggle="tooltip"]').tooltip();
-        });
     });
 </script>
 {% endblock %}
