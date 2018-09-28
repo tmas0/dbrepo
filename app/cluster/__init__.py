@@ -19,6 +19,6 @@
 
 from flask import Blueprint
 
-bp = Blueprint('business', __name__)
+bp = Blueprint('cluster', __name__)
 
-from app.business import routes
+from app.cluster import routes

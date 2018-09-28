@@ -1,3 +1,22 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+#
+# Copyright (C) 2018 Toni Mas <antoni.mas@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -42,6 +61,9 @@ def create_app(config_class=Config):
 
     from app.database import bp as database_bp
     app.register_blueprint(database_bp)
+
+    from app.cluster import bp as cluster_bp
+    app.register_blueprint(cluster_bp)
 
     if not app.debug and not app.testing:
         if not os.path.exists('logs'):

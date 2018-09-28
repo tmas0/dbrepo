@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 #
-# Copyright (C) 2017 Toni Mas <toni.mas@bluekiri.com>
+# Copyright (C) 2018 Toni Mas <antoni.mas@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,6 +65,44 @@ class Business(db.Model):
         nullable=False
     )
 
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+        #return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name != 'id' and c.name != 'active':
+                title = ''
+                if c.name == 'name':
+                    title = 'Business name:'
+                elif c.name == 'domain':
+                    title = 'Domain:'
+                meta.append({
+                    'field': c.name,
+                    'title': c.name.capitalize(),
+                    'sortable': True, 'editable': {
+                        'type': 'text',
+                        'title': title,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
+
 
 class Cluster(db.Model):
     """
@@ -84,6 +122,7 @@ class Cluster(db.Model):
         db.ForeignKey('business.id'),
         nullable=False
     )
+    business = db.relationship('Business', backref='businesses')
     name = db.Column(
         db.String(length=255),
         nullable=False,
@@ -101,6 +140,48 @@ class Cluster(db.Model):
         server_default="pgc",
         nullable=False
     )
+
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            elif c.name == 'business_id':
+                b = Business.query.get(int(getattr(self, c.name)))
+                data[c.name] = b.name
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name != 'id' and c.name != 'active':
+                title = ''
+                if c.name == 'name':
+                    title = 'Cluster name'
+                elif c.name == 'domainprefix':
+                    title = 'Domain Prefix'
+                elif c.name == 'business_id':
+                    title = 'Business'
+                meta.append({
+                    'field': c.name,
+                    'title': title,
+                    'sortable': True, 'editable': {
+                        'type': 'text',
+                        'title': title + ':',
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
 
 
 class Rule(db.Model):
@@ -194,15 +275,33 @@ class Database(db.Model):
     )
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+        #return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def serialize_columns(self):
         meta = []
         for c in self.__table__.columns:
             if c.name != 'id' and c.name != 'active':
-                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'text', 'title': 'Set database name', 'ajaxOptions': {'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
-            #elif c.name == 'active':
-            #    meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'source': '[{value: false, text: "false"}, {value: true, text: "true"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+                meta.append({
+                    'field': c.name,
+                    'title': c.name.capitalize(),
+                    'sortable': True, 'editable': {
+                        'type': 'text',
+                        'title': 'Database name:',
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
             else:
                 meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
 
@@ -337,11 +436,19 @@ class BackupHistory(db.Model):
     )
 
     def get_backup_history(self, diffdays=0, page=1, per_page=20):
-        query(Cluster.name, Database.name, BackupHistory.timecreated, BackupHistory.state, BackupHistory.info).\
-            join(Deployment.database_id).\
-            join(Cluster, Deployment.cluster_id==Cluster.id).\
-            outerjoin(BackupHistory, and_(Database.id==BackupHistory.database_id, Cluster.id==BackupHistory.cluster_id)).\
-            filter(BackupHistory.id==None)
+        
+        query(
+            Cluster.name,
+            Database.name,
+            BackupHistory.timecreated,
+            BackupHistory.state,
+            BackupHistory.info).\
+                join(
+                    Deployment.database_id
+                    ).\
+                join(Cluster, Deployment.cluster_id==Cluster.id).\
+                outerjoin(BackupHistory, and_(Database.id==BackupHistory.database_id, Cluster.id==BackupHistory.cluster_id)).\
+                filter(BackupHistory.id==None)
 
 
 class RecoveryHistory(db.Model):

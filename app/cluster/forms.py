@@ -17,8 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask import Blueprint
+from flask_wtf import FlaskForm
+from wtforms import StringField, BooleanField
+from wtforms.validators import DataRequired
+from wtforms_alchemy import ModelFieldList
+from wtforms.fields import FormField
+from app.business.forms import MyBusinessForm
 
-bp = Blueprint('business', __name__)
 
-from app.business import routes
+class ClusterForm(FlaskForm):
+    cluname = StringField(u'Business Name', validators=[DataRequired()])
+    business = ModelFieldList(FormField(MyBusinessForm))
+    domainprefix = StringField(u'Domain Prefix', validators=[DataRequired()])
+    active = BooleanField(u'Active', validators=[DataRequired()])

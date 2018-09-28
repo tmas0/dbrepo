@@ -22,10 +22,10 @@ from flask import render_template, redirect, url_for, request, \
     current_app, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Business
-from app.business import bp
+from app.models import Cluster
+from app.cluster import bp
 import re
-from app.business.forms import BusinessForm
+from app.cluster.forms import ClusterForm
 
 
 @bp.before_app_request
@@ -35,37 +35,37 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/business', methods=['GET'])
+@bp.route('/cluster', methods=['GET'])
 @login_required
 def index():
-    form = BusinessForm()
-    business = Business.query.order_by(Business.id.desc()).all()
+    form = ClusterForm()
+    clusters = Cluster.query.order_by(Cluster.id.desc()).all()
 
-    bu = Business()
-    columns = bu.serialize_columns()
+    cluster = Cluster()
+    columns = cluster.serialize_columns()
 
-    bus = []
-    for b in business:
-        bus.append(b.as_dict())
+    clus = []
+    for c in clusters:
+        clus.append(c.as_dict())
 
-    base_url = url_for('business.index')
-    action_url = url_for('business.add')
-    return render_template('business.html', title='Business',
-                           databases=bus, columns=columns,
+    base_url = url_for('cluster.index')
+    action_url = url_for('cluster.add')
+    return render_template('cluster.html', title='Cluster',
+                           databases=clus, columns=columns,
                            base_url=base_url, action_url=action_url,
                            per_page=current_app.config['ROWS_PER_PAGE'],
                            form=form)
 
 
-@bp.route('/business/update', methods=['POST'])
+@bp.route('/cluster/update', methods=['POST'])
 @login_required
 def update():
-    business_id = request.form['pk']
-    business = Business.query.filter_by(id=business_id).first_or_404()
-    if business is None:
+    cluster_id = request.form['pk']
+    cluster = Cluster.query.filter_by(id=cluster_id).first_or_404()
+    if cluster is None:
         flash(
-            'Business %(business_id)s not found',
-            business_id=request.form['pk']
+            'Cluster %(cluster_id)s not found',
+            cluster_id=request.form['pk']
             )
     else:
         key = request.form['name']
@@ -75,23 +75,23 @@ def update():
                 value = 1
             else:
                 value = 0
-        setattr(business, key, value)
+        setattr(cluster, key, value)
         db.session.commit()
         return 'Row modified'
 
     return 'Row not modified'
 
 
-@bp.route('/business/add', methods=['POST'])
+@bp.route('/cluster/add', methods=['POST'])
 @login_required
 def add():
-    form = BusinessForm()
+    form = ClusterForm()
     if form.validate_on_submit():
-        business_active = form.active.data
-        business_name = re.sub('[^A-Za-z0-9_]+', '', form.buname.data)
+        cluster_active = form.active.data
+        cluster_name = re.sub('[^A-Za-z0-9_]+', '', form.dbname.data)
 
-        business = Business(name=business_name, active=business_active)
+        cluster = Cluster(name=cluster_name, active=cluster_active)
 
-        db.add(business)
+        db.add(cluster)
 
-    return redirect(url_for('business.index'))
+    return redirect(url_for('cluster.index'))

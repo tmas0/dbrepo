@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="table">
+                <div id="toolbar">
+                        <button id="addnew" class="btn btn-success" data-toggle="modal" data-target="#modaladdnew">
+                            <i class="glyphicon glyphicon-plus"></i> Add New
+                        </button>
+                </div>
+                <table id="table"
+                       class="table table-sm table-striped table-bordered table-hover"
+                       data-toggle="true"
+                       data-toolbar="#toolbar"
+                       data-search="true"
+                       data-show-columns="true"
+                       data-pagination="true"
+                       data-page-size="{{ per_page }}"
+                       data-show-refresh="true"
+                       data-page-list="[10, 20, 50, 100, ALL]"
+                       data-id-field="id"
+                       data-editable-url="{{ base_url }}/update">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modaladdnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Add new {{ title | lower }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="addnew" action="{{ action_url }}" method="post">
+                        {{ form.hidden_tag() }}
+                        {% block formbody %}
+                        {% endblock %}
+                </div>
+                <div class="modal-footer">
+                    <button id="add" type="submit" class="btn btn-success">Add <i class="fa fa-paper-plane-o ml-1"></i></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel <i class="fa fa-paper-plane-o ml-1"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/editable/bootstrap-table-editable.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webui-popover/2.1.15/jquery.webui-popover.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tooltip.js/1.3.0/umd/tooltip.js"></script>
+<script type='text/javascript'>
+    $(window).load(function(){
+      var data = {{databases|tojson}};
+      var columns = {{columns|tojson}};
+      $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+      });
+      $('th').attr('data-editable', 'true');
+    });
+</script>
+{% endblock %}
