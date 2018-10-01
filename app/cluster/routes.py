@@ -22,7 +22,7 @@ from flask import render_template, redirect, url_for, request, \
     current_app, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Cluster
+from app.models import Cluster, Business
 from app.cluster import bp
 import re
 from app.cluster.forms import ClusterForm
@@ -48,10 +48,14 @@ def index():
     for c in clusters:
         clus.append(c.as_dict())
 
+    form.business.choices = [
+        (b.id, b.name) for b in Business.query.order_by('name').all()
+    ]
+
     base_url = url_for('cluster.index')
     action_url = url_for('cluster.add')
     return render_template('cluster.html', title='Cluster',
-                           databases=clus, columns=columns,
+                           rows=clus, columns=columns,
                            base_url=base_url, action_url=action_url,
                            per_page=current_app.config['ROWS_PER_PAGE'],
                            form=form)
@@ -86,11 +90,19 @@ def update():
 @login_required
 def add():
     form = ClusterForm()
+    form.business.choices = [
+        (b.id, b.name) for b in Business.query.order_by('name').all()
+    ]
     if form.validate_on_submit():
+        print(form.business.data)
         cluster_active = form.active.data
-        cluster_name = re.sub('[^A-Za-z0-9_]+', '', form.dbname.data)
+        cluster_name = re.sub('[^A-Za-z0-9_]+', '', form.cluname.data)
+        cluster_business_id = form.business.data
 
-        cluster = Cluster(name=cluster_name, active=cluster_active)
+        cluster = Cluster(
+            name=cluster_name,
+            active=cluster_active,
+            business_id=cluster_business_id)
 
         db.add(cluster)
 

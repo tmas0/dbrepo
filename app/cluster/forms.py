@@ -18,15 +18,16 @@
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField
+from wtforms import StringField, BooleanField, SelectField
 from wtforms.validators import DataRequired
-from wtforms_alchemy import ModelFieldList
-from wtforms.fields import FormField
-from app.business.forms import MyBusinessForm
 
 
 class ClusterForm(FlaskForm):
-    cluname = StringField(u'Business Name', validators=[DataRequired()])
-    business = ModelFieldList(FormField(MyBusinessForm))
+    cluname = StringField(u'Cluster Name', validators=[DataRequired()])
+    business = SelectField(
+        label=u'Business',
+        coerce=int,
+        validators=[DataRequired()]
+    )
     domainprefix = StringField(u'Domain Prefix', validators=[DataRequired()])
     active = BooleanField(u'Active', validators=[DataRequired()])

@@ -149,8 +149,7 @@ class Cluster(db.Model):
             elif c.name == 'active' and getattr(self, c.name) is False:
                 data[c.name] = str(0)
             elif c.name == 'business_id':
-                b = Business.query.get(int(getattr(self, c.name)))
-                data[c.name] = b.name
+                data[c.name] = self.business.name
             else:
                 data[c.name] = getattr(self, c.name)
         return data
@@ -158,20 +157,30 @@ class Cluster(db.Model):
     def serialize_columns(self):
         meta = []
         for c in self.__table__.columns:
-            if c.name != 'id' and c.name != 'active':
+            if c.name != 'id' and c.name != 'active' and c.name != 'business_id':
                 title = ''
                 if c.name == 'name':
                     title = 'Cluster name'
                 elif c.name == 'domainprefix':
                     title = 'Domain Prefix'
-                elif c.name == 'business_id':
-                    title = 'Business'
                 meta.append({
                     'field': c.name,
                     'title': title,
                     'sortable': True, 'editable': {
                         'type': 'text',
                         'title': title + ':',
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'business_id':
+                meta.append({
+                    'field': c.name,
+                    'title': 'Business',
+                    'sortable': True, 'editable': {
+                        'type': 'select',
+                        'title': 'Business:',
+                        'source': [(b.id, b.name) for b in Business.query.order_by('name').all()],
                         'ajaxOptions': {
                             'type': 'POST',
                             'success': 'function (data) { }',

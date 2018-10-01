@@ -51,7 +51,7 @@ def index():
     base_url = url_for('database.index')
     action_url = url_for('database.add')
     return render_template('database.html', title='Databases',
-                           databases=dbs, columns=columns,
+                           rows=dbs, columns=columns,
                            base_url=base_url, action_url=action_url,
                            per_page=current_app.config['ROWS_PER_PAGE'],
                            form=form)
