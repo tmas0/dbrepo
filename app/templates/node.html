@@ -1,0 +1,16 @@
+{% extends "maintenances.html" %}
+
+{% block formbody %}
+  <div class="form-group">
+      <label class="col-form-label" data-error="wrong" data-success="right" for="form3">Name:</label>
+      {{ form.nodename(class="form-control validate") }}
+  </div>
+  <div class="form-group">
+      <label class="col-form-label" data-error="wrong" data-success="right" for="form3">Business:</label>
+      {{ form.cluster(class="form-control validate") }}
+  </div>
+  <div class="form-group">
+      <label class="col-form-label" data-error="wrong" data-success="right" for="form2">Active:</label>
+      {{ form.active(class="col-form-label", checked="checked")}}
+  </div>
+{% endblock %}

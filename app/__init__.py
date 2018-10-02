@@ -65,6 +65,15 @@ def create_app(config_class=Config):
     from app.cluster import bp as cluster_bp
     app.register_blueprint(cluster_bp)
 
+    from app.node import bp as node_bp
+    app.register_blueprint(node_bp)
+
+    from app.environment import bp as environment_bp
+    app.register_blueprint(environment_bp)
+
+    from app.deployment import bp as deployment_bp
+    app.register_blueprint(deployment_bp)
+
     if not app.debug and not app.testing:
         if not os.path.exists('logs'):
             os.mkdir('logs')

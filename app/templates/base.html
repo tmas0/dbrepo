@@ -32,7 +32,16 @@
                     <li><a href="{{ url_for('cluster.index') }}">Cluster</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('node.index') }}">Node</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('environment.index') }}">Environment</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('database.index') }}">Database</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('deployment.index') }}">Deployment</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}

@@ -22,10 +22,10 @@ from flask import render_template, redirect, url_for, request, \
     current_app, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Business
-from app.business import bp
+from app.models import Environment
+from app.environment import bp
 import re
-from app.business.forms import BusinessForm
+from app.environment.forms import EnvironmentForm
 
 
 @bp.before_app_request
@@ -35,37 +35,37 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/business', methods=['GET'])
+@bp.route('/environment', methods=['GET'])
 @login_required
 def index():
-    form = BusinessForm()
-    business = Business.query.order_by(Business.id.desc()).all()
+    form = EnvironmentForm()
+    environments = Environment.query.order_by(Environment.id.desc()).all()
 
-    bu = Business()
-    columns = bu.serialize_columns()
+    env = Environment()
+    columns = env.serialize_columns()
 
-    bus = []
-    for b in business:
-        bus.append(b.as_dict())
+    envs = []
+    for e in environments:
+        envs.append(e.as_dict())
 
-    base_url = url_for('business.index')
-    action_url = url_for('business.add')
-    return render_template('business.html', title='Business',
-                           rows=bus, columns=columns,
+    base_url = url_for('environment.index')
+    action_url = url_for('environment.add')
+    return render_template('environment.html', title='Environments',
+                           rows=envs, columns=columns,
                            base_url=base_url, action_url=action_url,
                            per_page=current_app.config['ROWS_PER_PAGE'],
                            form=form)
 
 
-@bp.route('/business/update', methods=['POST'])
+@bp.route('/environment/update', methods=['POST'])
 @login_required
 def update():
-    business_id = request.form['pk']
-    business = Business.query.filter_by(id=business_id).first_or_404()
-    if business is None:
+    environment_id = request.form['pk']
+    environment = Environment.query.filter_by(id=environment_id).first_or_404()
+    if environment is None:
         flash(
-            'Business %(business_id)s not found',
-            business_id=request.form['pk']
+            'Environment %(environment_id)s not found',
+            environment_id=request.form['pk']
             )
     else:
         key = request.form['name']
@@ -75,28 +75,26 @@ def update():
                 value = 1
             else:
                 value = 0
-        setattr(business, key, value)
+        setattr(environment, key, value)
         db.session.commit()
         return 'Row modified'
 
     return 'Row not modified'
 
 
-@bp.route('/business/add', methods=['POST'])
+@bp.route('/environment/add', methods=['POST'])
 @login_required
 def add():
-    form = BusinessForm()
+    form = EnvironmentForm()
     if form.validate_on_submit():
-        business_active = form.active.data
-        business_name = re.sub('[^A-Za-z0-9_]+', '', form.buname.data)
-        business_domain = re.sub('[^A-Za-z0-9_]+', '', form.domain.data)
+        environment_active = form.active.data
+        environment_name = re.sub('[^A-Za-z0-9_]+', '', form.envname.data)
 
-        business = Business(
-            name=business_name,
-            active=business_active,
-            domain=business_domain
+        environment = Environment(
+            name=environment_name,
+            active=environment_active
         )
 
-        db.add(business)
+        db.add(environment)
 
-    return redirect(url_for('business.index'))
+    return redirect(url_for('environment.index'))

@@ -149,7 +149,7 @@ class Cluster(db.Model):
             elif c.name == 'active' and getattr(self, c.name) is False:
                 data[c.name] = str(0)
             elif c.name == 'business_id':
-                data[c.name] = self.business.name
+                data[c.name] = str(getattr(self, c.name))
             else:
                 data[c.name] = getattr(self, c.name)
         return data
@@ -174,17 +174,26 @@ class Cluster(db.Model):
                             'success': 'function (data) { }',
                             'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
             elif c.name == 'business_id':
+                source = []
+                for b in Business.query.order_by('name').all():
+                    bu = {}
+                    bu[b.id] = b.name
+                    source.append(bu)
                 meta.append({
                     'field': c.name,
                     'title': 'Business',
                     'sortable': True, 'editable': {
                         'type': 'select',
                         'title': 'Business:',
-                        'source': [(b.id, b.name) for b in Business.query.order_by('name').all()],
+                        'source': source,
                         'ajaxOptions': {
                             'type': 'POST',
                             'success': 'function (data) { }',
-                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'},
+                            'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'
+                        }
+                    }
+                )
             elif c.name == 'active':
                 meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
             else:
@@ -245,6 +254,7 @@ class Node(db.Model):
         db.ForeignKey('cluster.id'),
         nullable=False
     )
+    cluster = db.relationship('Cluster', backref='cluster')
     name = db.Column(
         db.String(length=255),
         nullable=False,
@@ -256,6 +266,64 @@ class Node(db.Model):
         server_default=text('true'),
         nullable=False
     )
+
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            elif c.name == 'cluster_id':
+                data[c.name] = str(getattr(self, c.name))
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name != 'id' and c.name != 'active' and c.name != 'cluster_id':
+                title = ''
+                if c.name == 'name':
+                    title = 'Cluster name'
+                meta.append({
+                    'field': c.name,
+                    'title': title,
+                    'sortable': True, 'editable': {
+                        'type': 'text',
+                        'title': title + ':',
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'cluster_id':
+                source = []
+                for b in Cluster.query.order_by('name').all():
+                    bu = {}
+                    bu[b.id] = b.name
+                    source.append(bu)
+                meta.append({
+                    'field': c.name,
+                    'title': 'Cluster',
+                    'sortable': True, 'editable': {
+                        'type': 'select',
+                        'title': 'Cluster:',
+                        'source': source,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'},
+                            'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'
+                        }
+                    }
+                )
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
 
 
 class Database(db.Model):
@@ -346,6 +414,43 @@ class Environment(db.Model):
         nullable=True
     )
 
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            title = ''
+            if c.name == 'name':
+                title = 'Environment name:'
+            elif c.name == 'domainprefix':
+                title = 'Domain Prefix:'
+            if c.name != 'id' and c.name != 'active':
+                meta.append({
+                    'field': c.name,
+                    'title': c.name.capitalize(),
+                    'sortable': True, 'editable': {
+                        'type': 'text',
+                        'title': title,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}, 'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'}})
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
+
 
 class Deployment(db.Model):
     """
@@ -365,27 +470,112 @@ class Deployment(db.Model):
         db.ForeignKey('environment.id'),
         nullable=False
     )
+    environment = db.relationship('Environment', backref='environments')
     cluster_id = db.Column(
         db.Integer,
         db.ForeignKey('cluster.id'),
         nullable=False
     )
+    cluster = db.relationship('Cluster', backref='clusters')
     database_id = db.Column(
         db.Integer,
         db.ForeignKey('database.id'),
         nullable=False
     )
-    name = db.Column(
-        db.String(length=255),
-        nullable=False,
-        unique=True
-    )
+    database = db.relationship('Database', backref='databases')
     active = db.Column(
         db.Boolean(),
         default=True,
         server_default=text('true'),
         nullable=False
     )
+
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'active' and getattr(self, c.name) is True:
+                data[c.name] = str(1)
+            elif c.name == 'active' and getattr(self, c.name) is False:
+                data[c.name] = str(0)
+            elif c.name in ['cluster_id', 'database_id', 'environment_id']:
+                data[c.name] = str(getattr(self, c.name))
+            else:
+                data[c.name] = getattr(self, c.name)
+        return data
+        #return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name == 'cluster_id':
+                source = []
+                for b in Cluster.query.order_by('name').all():
+                    bu = {}
+                    bu[b.id] = b.name
+                    source.append(bu)
+                meta.append({
+                    'field': c.name,
+                    'title': 'Cluster',
+                    'sortable': True, 'editable': {
+                        'type': 'select',
+                        'title': 'Cluster:',
+                        'source': source,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'},
+                            'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'
+                        }
+                    }
+                )
+            elif c.name == 'environment_id':
+                source = []
+                for b in Environment.query.order_by('name').all():
+                    bu = {}
+                    bu[b.id] = b.name
+                    source.append(bu)
+                meta.append({
+                    'field': c.name,
+                    'title': 'Environment',
+                    'sortable': True, 'editable': {
+                        'type': 'select',
+                        'title': 'Environment:',
+                        'source': source,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'},
+                            'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'
+                        }
+                    }
+                )
+            elif c.name == 'database_id':
+                source = []
+                for b in Database.query.order_by('name').all():
+                    bu = {}
+                    bu[b.id] = b.name
+                    source.append(bu)
+                meta.append({
+                    'field': c.name,
+                    'title': 'Database',
+                    'sortable': True, 'editable': {
+                        'type': 'select',
+                        'title': 'Database:',
+                        'source': source,
+                        'ajaxOptions': {
+                            'type': 'POST',
+                            'success': 'function (data) { }',
+                            'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'},
+                            'validate': 'function (value) { value = $.trim(value); if (!value) { return \'This field is required\'; } if (!/^\$/.test(value)) { return \'This field needs to start width $.\'} var data = $table.bootstrapTable(\'getData\'), index = $(this).parents(\'tr\').data(\'index\'); console.log(data[index]); return \'\';'
+                        }
+                    }
+                )
+            elif c.name == 'active':
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True, 'editable': {'type': 'select', 'title': 'Active:', 'source': '[{value: "1", text: "Yes"}, {value: "0", text: "No"}]', 'ajaxOptions': { 'type': 'POST', 'success': 'function (data) { }', 'error': 'function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }'}}})
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
 
 
 class BackupHistory(db.Model):

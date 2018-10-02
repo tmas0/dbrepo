@@ -22,10 +22,10 @@ from flask import render_template, redirect, url_for, request, \
     current_app, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Business
-from app.business import bp
+from app.models import Node, Cluster
+from app.node import bp
 import re
-from app.business.forms import BusinessForm
+from app.node.forms import NodeForm
 
 
 @bp.before_app_request
@@ -35,37 +35,41 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/business', methods=['GET'])
+@bp.route('/node', methods=['GET'])
 @login_required
 def index():
-    form = BusinessForm()
-    business = Business.query.order_by(Business.id.desc()).all()
+    form = NodeForm()
+    nodes = Node.query.order_by(Node.id.desc()).all()
 
-    bu = Business()
-    columns = bu.serialize_columns()
+    node = Node()
+    columns = node.serialize_columns()
 
-    bus = []
-    for b in business:
-        bus.append(b.as_dict())
+    nod = []
+    for c in nodes:
+        nod.append(c.as_dict())
 
-    base_url = url_for('business.index')
-    action_url = url_for('business.add')
-    return render_template('business.html', title='Business',
-                           rows=bus, columns=columns,
+    form.cluster.choices = [
+        (b.id, b.name) for b in Cluster.query.order_by('name').all()
+    ]
+
+    base_url = url_for('node.index')
+    action_url = url_for('node.add')
+    return render_template('node.html', title='Node',
+                           rows=nod, columns=columns,
                            base_url=base_url, action_url=action_url,
                            per_page=current_app.config['ROWS_PER_PAGE'],
                            form=form)
 
 
-@bp.route('/business/update', methods=['POST'])
+@bp.route('/node/update', methods=['POST'])
 @login_required
 def update():
-    business_id = request.form['pk']
-    business = Business.query.filter_by(id=business_id).first_or_404()
-    if business is None:
+    node_id = request.form['pk']
+    node = Node.query.filter_by(id=node_id).first_or_404()
+    if node is None:
         flash(
-            'Business %(business_id)s not found',
-            business_id=request.form['pk']
+            'Node %(node_id)s not found',
+            node_id=request.form['pk']
             )
     else:
         key = request.form['name']
@@ -75,28 +79,30 @@ def update():
                 value = 1
             else:
                 value = 0
-        setattr(business, key, value)
+        setattr(node, key, value)
         db.session.commit()
         return 'Row modified'
 
     return 'Row not modified'
 
 
-@bp.route('/business/add', methods=['POST'])
+@bp.route('/node/add', methods=['POST'])
 @login_required
 def add():
-    form = BusinessForm()
+    form = NodeForm()
+    form.cluster.choices = [
+        (b.id, b.name) for b in Cluster.query.order_by('name').all()
+    ]
     if form.validate_on_submit():
-        business_active = form.active.data
-        business_name = re.sub('[^A-Za-z0-9_]+', '', form.buname.data)
-        business_domain = re.sub('[^A-Za-z0-9_]+', '', form.domain.data)
+        node_active = form.active.data
+        node_name = re.sub('[^A-Za-z0-9_]+', '', form.nodename.data)
+        node_business_id = form.business.data
 
-        business = Business(
-            name=business_name,
-            active=business_active,
-            domain=business_domain
-        )
+        node = Node(
+            name=node_name,
+            active=node_active,
+            business_id=node_business_id)
 
-        db.add(business)
+        db.add(node)
 
-    return redirect(url_for('business.index'))
+    return redirect(url_for('node.index'))

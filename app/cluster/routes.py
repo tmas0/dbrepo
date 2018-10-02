@@ -94,14 +94,15 @@ def add():
         (b.id, b.name) for b in Business.query.order_by('name').all()
     ]
     if form.validate_on_submit():
-        print(form.business.data)
         cluster_active = form.active.data
         cluster_name = re.sub('[^A-Za-z0-9_]+', '', form.cluname.data)
+        cluster_domainprefix = re.sub('[^A-Za-z0-9_]+', '', form.domainprefix.data)
         cluster_business_id = form.business.data
 
         cluster = Cluster(
             name=cluster_name,
             active=cluster_active,
+            domainprefix=cluster_domainprefix,
             business_id=cluster_business_id)
 
         db.add(cluster)
