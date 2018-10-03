@@ -16,7 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import base64
 import datetime
+from datetime import timedelta
+import os
 from app import db, login
 from sqlalchemy import DateTime, Sequence, text
 from flask_login import UserMixin
@@ -383,6 +386,33 @@ class Database(db.Model):
                 meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
 
         return meta
+
+    def get_host(self, environment, database):
+        sql = text("SELECT "
+                    " c.domainprefix || '.' || coalesce(e.domainprefix, '') || c.name || '.' || b.domain AS domain"
+                    " FROM dba.database bd"
+                    " INNER JOIN dba.deployment d ON bd.id = d.database_id AND d.active IS TRUE"
+                    " INNER JOIN dba.environment e ON d.environment_id = e.id AND e.name = :environment AND e.active IS TRUE"
+                    " INNER JOIN dba.cluster c ON c.id = d.cluster_id AND c.active IS TRUE"
+                    " INNER JOIN dba.business b ON b.id = c.business_id and b.active IS TRUE"
+                    " WHERE bd.name = :database"
+                    " AND bd.active IS TRUE")
+
+        result = db.session.execute(
+            sql,
+            {
+                'environment': environment,
+                'database': database
+            }
+        )
+
+        data = []
+        for r in result:
+            bh = {}
+            bh['domain'] = r[0]
+            data.append(bh)
+
+        return data
 
 
 class Environment(db.Model):
@@ -761,6 +791,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(
         db.String(128)
     )
+    token = db.Column(db.String(32), index=True, unique=True)
+    token_expiration = db.Column(db.DateTime)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -771,6 +803,18 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
     #@staticmethod
     #def try_login(username, password):
         #conn = get_ldap_connection()
@@ -778,6 +822,12 @@ class User(UserMixin, db.Model):
         #    'cn=%s,ou=Users,dc=testathon,dc=net' % username,
         #    password
         #)
+    @staticmethod
+    def check_token(token):
+        user = User.query.filter_by(token=token).first()
+        if user is None or user.token_expiration < datetime.utcnow():
+            return None
+        return user
 
 
 @login.user_loader
