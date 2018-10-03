@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, request, current_app
 from flask_login import current_user, login_required
 from app import db
-from app.models import User, Business, Cluster
+from app.models import BackupHistory
 from app.main import bp
 from sqlalchemy import text
 
@@ -18,18 +18,15 @@ def before_request():
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    page = request.args.get('page', 1, type=int)
-    per_page = 20
-    sql = text("SELECT c.name as cluster, d.name as database, bh.timecreated, bh.state, bh.info"
-    " FROM dba.database d"
-    " INNER JOIN dba.deployment dp ON dp.database_id = d.id AND dp.environment_id = 1"
-    " INNER JOIN dba.cluster c ON dp.cluster_id = c.id"
-    " LEFT JOIN dba.backup_history bh ON d.id = bh.database_id AND c.id = bh.cluster_id AND bh.timecreated::date = current_date - interval '3' day"
-    " WHERE bh.id is null "
-    " ORDER BY bh.timecreated DESC")
-    print(sql)
-    backups = db.engine.execute(sql).paginate(page, per_page, False)
-    next_url = None
-    prev_url = None
-    return render_template('index.html', title='Home', next_url=next_url,
-                           backups=backups, prev_url=prev_url)
+    # Per database, show backup status.
+    bh = BackupHistory()
+
+    history = bh.get_backup_history(1)
+    columns = bh.serialize_columns()
+
+    base_url = url_for('database.index')
+    action_url = url_for('database.add')
+    return render_template('index.html', title='Backup status',
+                           rows=history, columns=columns,
+                           base_url=base_url, action_url=action_url,
+                           per_page=current_app.config['ROWS_PER_PAGE'])

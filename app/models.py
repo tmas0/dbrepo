@@ -634,20 +634,66 @@ class BackupHistory(db.Model):
         nullable=True
     )
 
-    def get_backup_history(self, diffdays=0, page=1, per_page=20):
-        
-        query(
-            Cluster.name,
-            Database.name,
-            BackupHistory.timecreated,
-            BackupHistory.state,
-            BackupHistory.info).\
-                join(
-                    Deployment.database_id
-                    ).\
-                join(Cluster, Deployment.cluster_id==Cluster.id).\
-                outerjoin(BackupHistory, and_(Database.id==BackupHistory.database_id, Cluster.id==BackupHistory.cluster_id)).\
-                filter(BackupHistory.id==None)
+    def __repr__(self):
+        return '<BackupHistory: {}>'.format(self.name)
+
+    def get_backup_history(self, diffdays=0):
+        sql = text(
+            "SELECT"
+            " c.name as cluster"
+            ", d.name as database"
+            ", bh.timecreated"
+            ", bh.state"
+            ", bh.info"
+            ", bh.size"
+            ", bh.duration"
+            ", bh.scheduled"
+            " FROM dba.database d"
+            " INNER JOIN dba.deployment dp"
+            "   ON dp.database_id = d.id"
+            "   AND dp.environment_id = 1"
+            "   AND dp.active is true"
+            " INNER JOIN dba.cluster c"
+            "   ON dp.cluster_id = c.id"
+            "   AND c.active IS true"
+            " LEFT JOIN dba.backup_history bh"
+            "   ON d.id = bh.database_id"
+            "   AND c.id = bh.cluster_id"
+            "   AND bh.timecreated::date = current_date - interval ':diffdays' day"
+            " WHERE d.active is true"
+            " ORDER BY c.name, d.name, bh.timecreated DESC")
+
+        result = db.session.execute(sql, {'diffdays': diffdays})
+        data = []
+        for r in result:
+            bh = {}
+            bh['cluster'] = r[0]
+            bh['database'] = r[1]
+            bh['timecreated'] = r[2]
+            bh['state'] = r[3]
+            bh['info'] = r[4]
+            bh['size'] = r[5]
+            bh['duration'] = r[6]
+            bh['scheduled'] = r[7]
+            data.append(bh)
+
+        return data
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name == 'cluster_id':
+                meta.append({'field': 'cluster', 'title': 'Cluster', 'sortable': True})
+            elif c.name == 'database_id':
+                meta.append({'field': 'database', 'title': 'Database', 'sortable': True})
+            elif c.name == 'timecreated':
+                meta.append({'field': c.name, 'title': 'Backup Date', 'sortable': True})
+            elif c.name == 'id':
+                pass
+            else:
+                meta.append({'field': c.name, 'title': c.name.capitalize(), 'sortable': True})
+
+        return meta
 
 
 class RecoveryHistory(db.Model):
