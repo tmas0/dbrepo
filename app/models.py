@@ -702,12 +702,19 @@ class BackupHistory(db.Model):
             bh['timecreated'] = r[2]
             bh['state'] = r[3]
             bh['info'] = r[4]
-            bh['size'] = r[5]
+            bh['size'] = self.sizeof_fmt(r[5])
             bh['duration'] = r[6]
             bh['scheduled'] = r[7]
             data.append(bh)
 
         return data
+
+    def sizeof_fmt(num, suffix='B'):
+        for unit in ['', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB']:
+            if abs(num) < 1024.0:
+                return "%3.1f%s%s" % (num, unit, suffix)
+            num /= 1024.0
+        return "%.1f%s%s" % (num, 'Y', suffix)
 
     def serialize_columns(self):
         meta = []
