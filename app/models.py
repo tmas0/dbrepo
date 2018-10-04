@@ -710,11 +710,14 @@ class BackupHistory(db.Model):
         return data
 
     def sizeof_fmt(num, suffix='B'):
-        for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-            if abs(int(num)) < 1024.0:
-                return "%3.1f%s%s" % (num, unit, suffix)
-            num /= 1024.0
-        return "%.1f%s%s" % (num, 'Y', suffix)
+        if num is None:
+            return None
+        else:
+            for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+                if abs(int(num)) < 1024.0:
+                    return "%3.1f%s%s" % (num, unit, suffix)
+                num /= 1024.0
+            return "%.1f%s%s" % (num, 'Y', suffix)
 
     def serialize_columns(self):
         meta = []
