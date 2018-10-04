@@ -25,11 +25,11 @@ from app.api.auth import token_auth
 from app.api.errors import bad_request
 
 
-@bp.route("/host/<environment>/<database>", methods=['GET'], endpoint='host')
+@bp.route("/host/<environment>/<database>", methods=['GET'])
 @token_auth.login_required
 def get_host_from_db(environment=None, database=None):
-    db = DBaaS()
+    d = Database()
 
-    host = db.get_host_from_db(environment, database)
+    host = d.get_host(environment, database)
 
     return jsonify({'host': host})

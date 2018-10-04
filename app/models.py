@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import base64
-import datetime
 from datetime import timedelta
+from datetime import datetime
 import os
 from app import db, login
 from sqlalchemy import DateTime, Sequence, text
@@ -624,7 +624,7 @@ class BackupHistory(db.Model):
     timecreated = db.Column(
         DateTime,
         nullable=False,
-        default=datetime.datetime.utcnow,
+        default=datetime.utcnow(),
         server_default=text('NOW()')
     )
     cluster_id = db.Column(
@@ -742,7 +742,7 @@ class RecoveryHistory(db.Model):
     timecreated = db.Column(
         DateTime,
         nullable=False,
-        default=datetime.datetime.utcnow,
+        default=datetime.utcnow(),
         server_default=text('NOW()')
     )
     cluster_id = db.Column(
