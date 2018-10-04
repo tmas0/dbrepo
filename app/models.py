@@ -665,7 +665,7 @@ class BackupHistory(db.Model):
     )
 
     def __repr__(self):
-        return '<BackupHistory: {}>'.format(self.name)
+        return '<BackupHistory:(id=%s, timecreated=%s, cluster_id=%s, database_id=%s, scheduled=%s, state=%s, size=%s, duration=%s, info=%s)>' %(self.id, self.timecreated, self.cluster_id, self.database_id, self.scheduled, self.state, self.size, self.duration, self.info)
 
     def get_backup_history(self, diffdays=0):
         sql = text(
