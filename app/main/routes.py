@@ -21,7 +21,7 @@ def index():
     # Per database, show backup status.
     bh = BackupHistory()
 
-    history = bh.get_backup_history(1)
+    history = bh.get_backup_history()
     columns = bh.serialize_columns()
 
     base_url = url_for('database.index')
