@@ -710,7 +710,7 @@ class BackupHistory(db.Model):
         return data
 
     def sizeof_fmt(num, suffix='B'):
-        for unit in ['', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB']:
+        for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if abs(num) < 1024.0:
                 return "%3.1f%s%s" % (num, unit, suffix)
             num /= 1024.0
