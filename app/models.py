@@ -655,7 +655,7 @@ class BackupHistory(db.Model):
         server_default=text('0')
     )
     duration = db.Column(
-        db.Integer,
+        db.BigInteger,
         nullable=False,
         default=0,
         server_default=text('0')
