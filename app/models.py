@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 import base64
 from datetime import timedelta
 from datetime import datetime
@@ -665,7 +666,21 @@ class BackupHistory(db.Model):
     )
 
     def __repr__(self):
-        return '<BackupHistory:(id=%s, timecreated=%s, cluster_id=%s, database_id=%s, scheduled=%s, state=%s, size=%s, duration=%s, info=%s)>' %(self.id, self.timecreated, self.cluster_id, self.database_id, self.scheduled, self.state, self.size, self.duration, self.info)
+        return '<BackupHistory:(id=%s,'
+        ' timecreated=%s, cluster_id=%s,'
+        ' database_id=%s, scheduled=%s,'
+        ' state=%s, size=%s, duration=%s,'
+        ' info=%s)>' % (
+            self.id,
+            self.timecreated,
+            self.cluster_id,
+            self.database_id,
+            self.scheduled,
+            self.state,
+            self.size,
+            self.duration,
+            self.info
+        )
 
     def get_backup_history(self, diffdays=0):
         sql = text(
@@ -702,22 +717,12 @@ class BackupHistory(db.Model):
             bh['timecreated'] = r[2]
             bh['state'] = r[3]
             bh['info'] = r[4]
-            bh['size'] = self.sizeof_fmt(r[5])
+            bh['size'] = sizeof_fmt(r[5])
             bh['duration'] = r[6]
             bh['scheduled'] = r[7]
             data.append(bh)
 
         return data
-
-    def sizeof_fmt(num, suffix='B'):
-        if num is None:
-            return None
-        else:
-            for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-                if abs(int(num)) < 1024.0:
-                    return "%3.1f%s%s" % (num, unit, suffix)
-                num /= 1024.0
-            return "%.1f%s%s" % (num, 'Y', suffix)
 
     def serialize_columns(self):
         meta = []
@@ -843,3 +848,14 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+def sizeof_fmt(num, suffix='B'):
+    if num is None:
+        return None
+    else:
+        for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+            if abs(int(num)) < 1024.0:
+                return "%3.1f%s%s" % (num, unit, suffix)
+            num /= 1024.0
+        return "%.1f%s%s" % (num, 'Y', suffix)
