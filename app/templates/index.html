@@ -3,12 +3,23 @@
 {% block head %}
 {{ super() }}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-offset-1 col-md-10">
             <div class="table">
+                <div id="toolbar">
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <table id="table"
                        class="table table-sm table-striped table-bordered table-hover"
                        data-toggle="true"
@@ -29,6 +40,7 @@
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/editable/bootstrap-table-editable.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webui-popover/2.1.15/jquery.webui-popover.js"></script>
@@ -44,6 +56,22 @@
         });
       });
       $('th').attr('data-editable', 'true');
+      $('#datetimepicker1').datepicker({
+        format: 'dd/mm/yyyy',
+        calendarWeeks: true,
+        todayBtr: true,
+        todayHighlight: true,
+        weekStart: 1,
+        endDate: '0d',
+        autoclose: true
+      }).on('changeDate', function(e){
+        $.ajax({
+              type: 'POST',
+              url: "{{base_url}}",
+              data: "date="+moment(e.date).format('L'),
+              success: function(data, result) { }
+        });
+      });
     });
 </script>
 {% endblock %}

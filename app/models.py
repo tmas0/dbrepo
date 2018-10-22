@@ -682,7 +682,7 @@ class BackupHistory(db.Model):
             self.info
         )
 
-    def get_backup_history(self, diffdays=0):
+    def get_backup_history(self, date=datetime.now()):
         sql = text(
             "SELECT"
             " c.name as cluster"
@@ -704,11 +704,14 @@ class BackupHistory(db.Model):
             " LEFT JOIN dba.backup_history bh"
             "   ON d.id = bh.database_id"
             "   AND c.id = bh.cluster_id"
-            "   AND bh.timecreated::date = current_date - interval ':diffdays' day"
+            "   AND bh.timecreated::date = to_date(:thedate, 'YYYY-MM-DD')"
             " WHERE d.active is true"
             " ORDER BY c.name, d.name, bh.timecreated DESC")
 
-        result = db.session.execute(sql, {'diffdays': diffdays})
+        result = db.session.execute(
+            sql,
+            {'thedate': date.strftime('%Y-%m-%d')}
+        )
         data = []
         for r in result:
             bh = {}
