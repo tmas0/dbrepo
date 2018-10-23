@@ -1,10 +1,28 @@
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+#
+# Copyright (C) 2018 Toni Mas <antoni.mas@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 from datetime import datetime
 from flask import render_template, redirect, url_for, request, current_app, jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.models import BackupHistory
 from app.main import bp
-from sqlalchemy import text
 
 
 @bp.before_app_request
@@ -47,10 +65,7 @@ def index_refresh():
     else:
         date = datetime.now()
 
-    print(date)
     # Per database, show backup status.
     bh = BackupHistory()
-
-    print(bh.get_backup_history(date))
 
     return jsonify(bh.get_backup_history(date))
