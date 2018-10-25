@@ -69,7 +69,17 @@
               type: 'POST',
               url: "{{base_url}}",
               data: "date="+moment(e.date).format('L'),
-              success: function(data, result) { }
+              success: function(data, result) { 
+                $('#table').bootstrapTable('destroy'); 
+                var columns = {{columns|tojson}};
+                $(function() {
+                  $('#table').bootstrapTable({ 
+                    data: data,
+                    columns: columns,
+                  });
+                });
+              },
+              error: function (xhr, status, error) { var err = eval("(" + xhr.responseText + ")"); alert(err.Message); }
         });
       });
     });
