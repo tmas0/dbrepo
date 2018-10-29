@@ -69,6 +69,13 @@ class Business(db.Model):
         nullable=False
     )
 
+    @property
+    def serialize(self):
+        return {
+            'business_id': self.id,
+            'business_name': self.name
+        }
+
     def get_business(self):
         return Business.query.with_entities(Business.id, Business.name).\
             filter_by(active=True).all()
