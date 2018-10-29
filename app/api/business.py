@@ -17,8 +17,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask import Blueprint
+from flask import jsonify
+from app.models import Business
+from app.api import bp
+from app.api.auth import token_auth
+from app.api.errors import bad_request
 
-bp = Blueprint('api', __name__)
 
-from app.api import databases, business, errors, tokens
+@bp.route("/business", methods=['GET'])
+@token_auth.login_required
+def get_business():
+    b = Business()
+
+    business = b.get_business()
+
+    return jsonify({'business': business})

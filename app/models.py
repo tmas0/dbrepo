@@ -69,6 +69,10 @@ class Business(db.Model):
         nullable=False
     )
 
+    def get_business(self):
+        return Business.query(Business.id, Business.name).\
+            filter_by(active=True).first()
+
     def as_dict(self):
         data = {}
         for c in self.__table__.columns:
