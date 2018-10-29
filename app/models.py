@@ -70,7 +70,7 @@ class Business(db.Model):
     )
 
     def get_business(self):
-        return Business.query(Business.id, Business.name).\
+        return Business.query.with_entities(Business.id, Business.name).\
             filter_by(active=True).first()
 
     def as_dict(self):
