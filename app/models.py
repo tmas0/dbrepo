@@ -71,7 +71,7 @@ class Business(db.Model):
 
     def get_business(self):
         return Business.query.with_entities(Business.id, Business.name).\
-            filter_by(active=True).first()
+            filter_by(active=True).all()
 
     def as_dict(self):
         data = {}
