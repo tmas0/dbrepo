@@ -260,7 +260,7 @@ class Node(db.Model):
     # Fields.
     id = db.Column(
         db.Integer,
-        Sequence('nodes_id_seq', start=1, increment=1),
+        Sequence('node_id_seq', start=1, increment=1),
         primary_key=True,
         nullable=False
     )
