@@ -96,12 +96,12 @@ def add():
     if form.validate_on_submit():
         node_active = form.active.data
         node_name = re.sub('[^A-Za-z0-9_]+', '', form.nodename.data)
-        node_business_id = form.business.data
+        node_cluster_id = form.cluster.data
 
         node = Node(
             name=node_name,
             active=node_active,
-            business_id=node_business_id)
+            cluster_id=node_cluster_id)
 
         db.session.add(node)
         db.session.commit()
