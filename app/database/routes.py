@@ -92,6 +92,7 @@ def add():
 
         database = Database(name=database_name, active=database_active)
 
-        db.add(database)
+        db.session.add(database)
+        db.session.commit()
 
     return redirect(url_for('database.index'))

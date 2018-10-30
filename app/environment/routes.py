@@ -95,6 +95,7 @@ def add():
             active=environment_active
         )
 
-        db.add(environment)
+        db.session.add(environment)
+        db.session.commit()
 
     return redirect(url_for('environment.index'))

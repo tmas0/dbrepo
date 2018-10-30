@@ -105,6 +105,7 @@ def add():
             domainprefix=cluster_domainprefix,
             business_id=cluster_business_id)
 
-        db.add(cluster)
+        db.session.add(cluster)
+        db.session.commit()
 
     return redirect(url_for('cluster.index'))

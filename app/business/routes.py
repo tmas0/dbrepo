@@ -97,6 +97,7 @@ def add():
             domain=business_domain
         )
 
-        db.add(business)
+        db.session.add(business)
+        db.session.commit()
 
     return redirect(url_for('business.index'))

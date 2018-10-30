@@ -103,6 +103,7 @@ def add():
             active=node_active,
             business_id=node_business_id)
 
-        db.add(node)
+        db.session.add(node)
+        db.session.commit()
 
     return redirect(url_for('node.index'))

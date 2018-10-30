@@ -118,6 +118,7 @@ def add():
             environment_id=deployment_environment_id
         )
 
-        db.add(deployment)
+        db.session.add(deployment)
+        db.session.commit()
 
     return redirect(url_for('deployment.index'))
