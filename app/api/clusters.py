@@ -30,8 +30,7 @@ def get_clusters(business_id=None, environment='production'):
 
     clusters = Cluster.query.with_entities(
         Cluster.id,
-        Cluster.name,
-        Cluster.domainprefix
+        Cluster.name
     ).filter_by(
         business_id=business_id,
         active=True
