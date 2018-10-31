@@ -17,9 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from flask import Blueprint
+from flask import jsonify
+from app.models import Cluster, Business
+from app.api import bp
+from app.api.auth import token_auth
+from app.api.errors import bad_request
 
-bp = Blueprint('api', __name__)
 
-from app.api import databases, business, rules, \
-    clusters, errors, tokens
+@bp.route("/cluster/<int:business_id>/<environment>", methods=['GET'])
+@token_auth.login_required
+def get_config(business_id=None, environment='production'):
+    b = Business.query.get_or_404(business_id)
+
+    clusters = Cluster.query.with_entities(
+        Cluster.id,
+        Cluster.name,
+        Cluster.domainprefix
+    ).filter_by(
+        business_id=business_id,
+        active=True
+    ).first()
+
+    return jsonify({'data': clusters})
