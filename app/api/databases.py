@@ -33,3 +33,13 @@ def get_host_from_db(environment=None, database=None):
     host = d.get_host(environment, database)
 
     return jsonify({'host': host})
+
+
+@bp.route("/database/<int:cluster_id>/<environment>", methods=['GET'])
+@token_auth.login_required
+def get_databases(cluster_id, environment=None):
+    d = Database()
+
+    dbs = d.get_databases(cluster_id, environment)
+
+    return jsonify({'data': dbs})

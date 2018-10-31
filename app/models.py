@@ -426,6 +426,31 @@ class Database(db.Model):
 
         return data
 
+    def get_databases(self, cluster, environment):
+        sql = text("SELECT "
+                    " d.id AS database_id, d.name AS database"
+                    " FROM dba.database d"
+                    " INNER JOIN dba.environment e ON d.environment_id = e.id AND e.name = :environment AND e.active IS TRUE"
+                    " INNER JOIN dba.deployment de ON d.id = de.database_id AND de.active IS TRUE AND e.id = de.environment_id"
+                    " INNER JOIN dba.cluster c ON c.id = de.cluster_id AND c.id = :cluster AND c.active IS TRUE"
+                    " WHERE d.active IS TRUE")
+
+        result = db.session.execute(
+            sql,
+            {
+                'environment': environment,
+                'cluster': cluster
+            }
+        )
+
+        data = []
+        for r in result:
+            bh = {}
+            bh['domain'] = r[0]
+            data.append(bh)
+
+        return data
+
 
 class Environment(db.Model):
     """
