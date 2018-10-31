@@ -31,4 +31,4 @@ def get_business():
 
     business = b.get_business()
 
-    return jsonify({'business': business})
+    return jsonify({'data': business})
