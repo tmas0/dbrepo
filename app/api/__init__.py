@@ -21,4 +21,4 @@ from flask import Blueprint
 
 bp = Blueprint('api', __name__)
 
-from app.api import databases, business, errors, tokens
+from app.api import databases, business, rules, errors, tokens
