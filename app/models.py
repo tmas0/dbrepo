@@ -447,7 +447,7 @@ class Database(db.Model):
         for r in result:
             bh = {}
             bh['database_id'] = r[0]
-            bh['database'] = r[1]
+            bh['dbname'] = r[1]
             data.append(bh)
 
         return data
