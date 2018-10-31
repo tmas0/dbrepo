@@ -21,7 +21,6 @@ from flask import jsonify
 from app.models import Cluster, Business
 from app.api import bp
 from app.api.auth import token_auth
-from app.api.errors import bad_request
 
 
 @bp.route("/cluster/<int:business_id>/<environment>", methods=['GET'])
@@ -36,6 +35,6 @@ def get_clusters(business_id=None, environment='production'):
     ).filter_by(
         business_id=business_id,
         active=True
-    ).first()
+    ).all()
 
     return jsonify({'data': clusters})
