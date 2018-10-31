@@ -447,7 +447,7 @@ class Database(db.Model):
         for r in result:
             d = []
             d.append(r[0])
-            d.append([1])
+            d.append(r[1])
             data.append(d)
 
         return data
