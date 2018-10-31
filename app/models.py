@@ -445,10 +445,10 @@ class Database(db.Model):
 
         data = []
         for r in result:
-            bh = {}
-            bh['database_id'] = r[0]
-            bh['dbname'] = r[1]
-            data.append(bh)
+            d = []
+            d[0] = r[0]
+            d[1] = r[1]
+            data.append(d)
 
         return data
 
