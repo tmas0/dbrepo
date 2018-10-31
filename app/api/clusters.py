@@ -23,9 +23,9 @@ from app.api import bp
 from app.api.auth import token_auth
 
 
-@bp.route("/cluster/<int:business_id>/<environment>", methods=['GET'])
+@bp.route("/cluster/<int:business_id>", methods=['GET'])
 @token_auth.login_required
-def get_clusters(business_id=None, environment='production'):
+def get_clusters(business_id=None):
     b = Business.query.get_or_404(business_id)
 
     clusters = Cluster.query.with_entities(
