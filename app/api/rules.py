@@ -27,7 +27,7 @@ from app.api.errors import bad_request
 @bp.route("/rule/<int:business_id>/<key>", methods=['GET'])
 @token_auth.login_required
 def get_config(business_id=None, key=None):
-    b = Business.get_or_404(business_id)
+    b = Business.query.get_or_404(business_id)
 
     if key is None:
         return bad_request('Please, set your key')
