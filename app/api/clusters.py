@@ -26,7 +26,7 @@ from app.api.errors import bad_request
 
 @bp.route("/cluster/<int:business_id>/<environment>", methods=['GET'])
 @token_auth.login_required
-def get_config(business_id=None, environment='production'):
+def get_clusters(business_id=None, environment='production'):
     b = Business.query.get_or_404(business_id)
 
     clusters = Cluster.query.with_entities(
