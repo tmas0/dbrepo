@@ -18,9 +18,13 @@
 
 
 from flask import jsonify
-from app.models import Cluster, Business
+from app.models import Cluster, Business, Node
 from app.api import bp
 from app.api.auth import token_auth
+import psycopg2
+import psycopg2.extras
+import os
+import sys
 
 
 @bp.route("/cluster/<int:business_id>", methods=['GET'])
@@ -32,8 +36,53 @@ def get_clusters(business_id=None):
         Cluster.id,
         Cluster.name
     ).filter_by(
-        business_id=business_id,
+        business_id=b.id,
         active=True
     ).all()
 
     return jsonify({'data': clusters})
+
+
+@bp.route("/standby/<int:cluster_id>", methods=['GET'])
+@token_auth.login_required
+def get_standby_node(cluster_id=None):
+    c = Cluster.query.get_or_404(cluster_id)
+
+    nodes = Node.query.with_entities(
+        Node.name
+    ).filter_by(
+        cluster_id=c.id,
+        active=True
+    ).all()
+
+    # Get foreign connection settings.
+    try:
+        dbuser = os.getenv('PGMB_EDBUSER', 'postgres')
+        dbpassword = os.getenv('PGMB_EDBPASSWORD', '')
+        dbport = os.getenv('PGMB_EPORT', 5432)
+    except os.error:
+        print(
+            """User or Password not set.
+               Use export=PGMB_EDBUSER=your_username;
+               export=PGMB_EDBPASSWORD=your_password
+               for external node connection"""
+        )
+
+    # Search stanby node.
+    for n in nodes:
+        # Determine if standby node.
+        conn = psycopg2.connect(
+            dbname='postgres',
+            user=dbuser,
+            password=dbpassword,
+            host=n,
+            port=dbport
+        )
+        cursor = conn.cursor()
+        cursor.execute('SELECT pg_is_in_recovery()')
+        is_master = cursor.fetchall()
+        cursor.close()
+        if not is_master[0][0]:
+            return jsonify({'data': n})
+
+    return jsonify({'data': []})
