@@ -70,7 +70,7 @@ def get_standby_node(cluster_id=None):
 
     # Search stanby node.
     for n in nodes:
-        node = n + b.domain
+        node = n[0] + '.' + b.domain
         # Determine if standby node.
         conn = psycopg2.connect(
             dbname='postgres',
