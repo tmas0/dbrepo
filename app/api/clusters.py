@@ -83,6 +83,7 @@ def get_standby_node(cluster_id=None):
         cursor.execute('SELECT pg_is_in_recovery()')
         is_master = cursor.fetchall()
         cursor.close()
+        conn.close()
         if not is_master[0][0]:
             return jsonify({'data': n})
 
