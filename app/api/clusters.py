@@ -24,7 +24,6 @@ from app.api.auth import token_auth
 import psycopg2
 import psycopg2.extras
 import os
-import sys
 
 
 @bp.route("/cluster/<int:business_id>", methods=['GET'])
@@ -47,6 +46,7 @@ def get_clusters(business_id=None):
 @token_auth.login_required
 def get_standby_node(cluster_id=None):
     c = Cluster.query.get_or_404(cluster_id)
+    b = Business.query.filter_by(id=c.business_id).first()
 
     nodes = Node.query.with_entities(
         Node.name
@@ -70,12 +70,13 @@ def get_standby_node(cluster_id=None):
 
     # Search stanby node.
     for n in nodes:
+        node = n + b.domain
         # Determine if standby node.
         conn = psycopg2.connect(
             dbname='postgres',
             user=dbuser,
             password=dbpassword,
-            host=n,
+            host=node,
             port=dbport
         )
         cursor = conn.cursor()
