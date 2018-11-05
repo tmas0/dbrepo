@@ -719,6 +719,11 @@ class BackupHistory(db.Model):
             self.info
         )
 
+    def from_dict(self, data):
+        for field in ['cluster_id', 'database_id', 'scheduled', 'state', 'size', 'duration', 'info']:
+            if field in data:
+                setattr(self, field, data[field])
+
     def get_backup_history(self, date=datetime.now()):
         sql = text(
             "SELECT"
