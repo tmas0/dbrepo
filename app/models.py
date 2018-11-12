@@ -719,6 +719,13 @@ class BackupHistory(db.Model):
             self.info
         )
 
+    def to_dict(self, row):
+        d = {}
+        for column in row.__table__.columns:
+            d[column.name] = str(getattr(row, column.name))
+
+        return d
+
     def from_dict(self, data):
         for field in ['cluster_id', 'database_id', 'scheduled', 'state', 'size', 'duration', 'info']:
             if field in data:
