@@ -85,6 +85,6 @@ def get_standby_node(cluster_id=None):
         cursor.close()
         conn.close()
         if is_slave[0][0]:
-            return jsonify({'data': n})
+            return jsonify({'data': node})
 
-    return jsonify({'data': []})
+    return jsonify({'data': ''})
