@@ -72,19 +72,23 @@ def get_standby_node(cluster_id=None):
     for n in nodes:
         node = n[0] + '.' + b.domain
         # Determine if standby node.
-        conn = psycopg2.connect(
-            dbname='postgres',
-            user=dbuser,
-            password=dbpassword,
-            host=node,
-            port=dbport
-        )
-        cursor = conn.cursor()
-        cursor.execute('SELECT pg_is_in_recovery()')
-        is_slave = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        if is_slave[0][0]:
-            return jsonify({'data': node})
+        try:
+            conn = psycopg2.connect(
+                dbname='postgres',
+                user=dbuser,
+                password=dbpassword,
+                host=node,
+                port=dbport
+            )
+            cursor = conn.cursor()
+            cursor.execute('SELECT pg_is_in_recovery()')
+            is_slave = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            if is_slave[0][0]:
+                return jsonify({'data': node})
+        except Exception as e:
+            print('Node: %s' % node)
+            print(e)
 
     return jsonify({'data': ''})
