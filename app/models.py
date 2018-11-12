@@ -719,10 +719,10 @@ class BackupHistory(db.Model):
             self.info
         )
 
-    def to_dict(self, row):
+    def to_dict(self):
         d = {}
-        for column in row.__table__.columns:
-            d[column.name] = str(getattr(row, column.name))
+        for column in self.__table__.columns:
+            d[column.name] = str(getattr(self, column.name))
 
         return d
 
