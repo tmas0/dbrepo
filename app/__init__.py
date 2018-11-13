@@ -74,6 +74,9 @@ def create_app(config_class=Config):
     from app.deployment import bp as deployment_bp
     app.register_blueprint(deployment_bp)
 
+    from app.user import bp as user_bp
+    app.register_blueprint(user_bp)
+
     from app.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
