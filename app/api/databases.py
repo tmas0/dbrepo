@@ -19,7 +19,7 @@
 
 from flask import jsonify, request, url_for
 from app import db
-from app.models import Database
+from app.models import Database, Cluster, Business
 from app.api import bp
 from app.api.auth import token_auth
 from app.api.errors import bad_request
@@ -43,3 +43,18 @@ def get_databases(cluster_id, environment=None):
     dbs = d.get_databases(cluster_id, environment)
 
     return jsonify({'data': dbs})
+
+
+@bp.route("/database/verify/<cluster>/<database>", methods=['GET'])
+@token_auth.login_required
+def verify(cluster, database):
+    data = request.get_json() or {}
+    c = Cluster.query.filter_by(name=data['cluster']).first()
+    if not c:
+        return bad_request('please use a valid cluster name')
+    if not Database.query.filter_by(id=data['database']).first():
+        return bad_request('please use a valid database name')
+
+    business = Business.query.filter(id=c.business_id)
+
+    return jsonify({'data': business})

@@ -49,7 +49,7 @@ def index():
         u.append(us.as_dict())
 
     base_url = url_for('user.index')
-    action_url = url_for('user.add')
+    action_url = url_for('user.register')
     return render_template('user.html', title='User administration',
                            rows=u, columns=columns,
                            base_url=base_url, action_url=action_url,
@@ -62,8 +62,14 @@ def index():
 def register():
     form = UserForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User(form.username.data, form.email.data)
+        # Workarround.
+        lastid = User.query.order_by(User.id.desc()).first()
+        user = User(
+            id=lastid.id+1,
+            username=form.username.data,
+            email=form.email.data
+        )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-    return redirect(url_for('login.index'))
+    return redirect(url_for('user.index'))

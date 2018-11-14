@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import copy
+
 import base64
 from datetime import timedelta
 from datetime import datetime
@@ -839,6 +839,7 @@ class RecoveryHistory(db.Model):
 
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'user'
     id = db.Column(
         db.Integer,
         Sequence('user_id_seq', start=1, increment=1),
@@ -863,6 +864,25 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+    def serialize_columns(self):
+        meta = []
+        for c in self.__table__.columns:
+            if c.name == 'username':
+                meta.append({'field': 'username', 'title': 'Username', 'sortable': True})
+            elif c.name == 'email':
+                meta.append({'field': 'email', 'title': 'Email', 'sortable': True})
+            else:
+                pass
+
+        return meta
+
+    def as_dict(self):
+        data = {}
+        for c in self.__table__.columns:
+            if c.name == 'username' or c.name == 'email':
+                data[c.name] = getattr(self, c.name)
+        return data
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
