@@ -58,7 +58,7 @@ def get_standby_node(cluster_id=None):
     # Get foreign connection settings.
     try:
         dbuser = os.getenv('PGMB_EDBUSER', 'postgres')
-        dbpassword = os.getenv('PGMB_EDBPASSWORD', '')
+        dbpassword = os.getenv('PGMB_EDBPASSWORD', None)
         dbport = os.getenv('PGMB_EPORT', 5432)
     except os.error:
         print(
@@ -73,13 +73,21 @@ def get_standby_node(cluster_id=None):
         node = n[0] + '.' + b.domain
         # Determine if standby node.
         try:
-            conn = psycopg2.connect(
-                dbname='postgres',
-                user=dbuser,
-                password=dbpassword,
-                host=node,
-                port=dbport
-            )
+            if dbpassword is None:
+                conn = psycopg2.connect(
+                    dbname='postgres',
+                    user=dbuser,
+                    host=node,
+                    port=dbport
+                )
+            else:
+                conn = psycopg2.connect(
+                    dbname='postgres',
+                    user=dbuser,
+                    password=dbpassword,
+                    host=node,
+                    port=dbport
+                )
             cursor = conn.cursor()
             cursor.execute('SELECT pg_is_in_recovery()')
             is_slave = cursor.fetchall()
@@ -90,5 +98,6 @@ def get_standby_node(cluster_id=None):
         except Exception as e:
             print('Node: %s' % node)
             print(e)
+            pass
 
     return jsonify({'data': ''})
