@@ -48,15 +48,14 @@ def get_databases(cluster_id, environment=None):
 @bp.route("/database/verify/<cluster>/<database>", methods=['GET'])
 @token_auth.login_required
 def verify(cluster, database):
-    data = request.get_json() or {}
     c = Cluster.query.with_entities(
         Cluster.id,
         Cluster.name
-    ).filter_by(name=data['cluster']).first()
+    ).filter_by(name=cluster).first()
     d = Database.query.with_entities(
         Database.id,
         Database.name
-    ).filter_by(id=data['database']).first()
+    ).filter_by(name=database).first()
     if not c:
         return None
     if not d:
