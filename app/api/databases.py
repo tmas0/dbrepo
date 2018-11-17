@@ -50,7 +50,8 @@ def get_databases(cluster_id, environment=None):
 def verify(cluster, database):
     c = Cluster.query.with_entities(
         Cluster.id,
-        Cluster.name
+        Cluster.name,
+        Cluster.business_id
     ).filter_by(name=cluster).first()
     d = Database.query.with_entities(
         Database.id,
@@ -64,7 +65,7 @@ def verify(cluster, database):
     b = Business.query.with_entities(
         Business.id,
         Business.name
-    ).filter_by(id=c[0]).first()
+    ).filter_by(id=c[2]).first()
 
     if not b:
         return None
