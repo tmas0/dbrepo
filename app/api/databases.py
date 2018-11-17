@@ -64,7 +64,7 @@ def verify(cluster, database):
     b = Business.query.with_entities(
         Business.id,
         Business.name
-    ).filter_by(id=c[0])
+    ).filter_by(id=c[0]).first()
 
     if not b:
         return None
