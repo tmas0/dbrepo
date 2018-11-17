@@ -64,15 +64,18 @@ def verify(cluster, database):
     b = Business.query.with_entities(
         Business.id,
         Business.name
-    ).filter(id=c.business_id)
+    ).filter_by(id=c[0])
 
     if not b:
         return None
 
+    clus = {'id': c[0], 'name': c[1]}
+    dat = {'id': d[0], 'name': d[1]}
+    bus = {'id': b[0], 'name': b[1]}
     result = {
-        'business': b,
-        'database': d,
-        'cluster': c
+        'business': bus,
+        'database': dat,
+        'cluster': clus
     }
 
     return jsonify({'data': result})
