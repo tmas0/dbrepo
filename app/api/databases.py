@@ -58,9 +58,9 @@ def verify(cluster, database):
         Database.name
     ).filter_by(name=database).first()
     if not c:
-        return None
+        return bad_request('Cluster not found')
     if not d:
-        return None
+        return bad_request('Database not found')
 
     b = Business.query.with_entities(
         Business.id,
@@ -68,7 +68,7 @@ def verify(cluster, database):
     ).filter_by(id=c[2]).first()
 
     if not b:
-        return None
+        return bad_request('Business not found')
 
     clus = {'id': c[0], 'name': c[1]}
     dat = {'id': d[0], 'name': d[1]}
