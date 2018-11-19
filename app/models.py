@@ -676,7 +676,7 @@ class BackupHistory(db.Model):
         nullable=False
     )
     scheduled = db.Column(
-        db.String(length=12),
+        db.String(length=14),
         nullable=False
     )
     state = db.Column(
