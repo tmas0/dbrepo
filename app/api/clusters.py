@@ -95,9 +95,7 @@ def get_standby_node(cluster_id=None):
             conn.close()
             if is_slave[0][0]:
                 return jsonify({'data': node})
-        except Exception as e:
-            print('Node: %s' % node)
-            print(e)
+        except Exception:
             pass
 
-    return jsonify({'data': ''})
+    return jsonify({'data': c.domainprefix + '.' + c.name + '.' + b.domain})
