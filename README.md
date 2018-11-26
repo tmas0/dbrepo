@@ -36,7 +36,7 @@ Install and execute gunicorn.
 vi /lib/systemd/system/dbrepo.service
 ```
 
-And put these:
+And set:
 ```
 [Unit]
 Description=DbRepo
