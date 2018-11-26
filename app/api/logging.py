@@ -23,6 +23,8 @@ from app.api import bp
 from app.api.auth import token_auth
 from app.api.errors import bad_request
 from app import db
+from app import logger
+import datetime
 
 
 @bp.route('/backup/logging', methods=['POST'])
@@ -35,11 +37,14 @@ def new_backup_event():
         return bad_request(
             'must include cluster_id, database_id and scheduled fields'
         )
+    if 'timecreated' not in data:
+        data['timecreated'] = datetime.datetime.utcnow
     if not Cluster.query.filter_by(id=data['cluster_id']).first():
         return bad_request('please use a valid cluster identifier')
     if not Database.query.filter_by(id=data['database_id']).first():
         return bad_request('please use a valid database identifier')
 
+    logger.info('Logging: %s' % data)
     bh = BackupHistory()
     bh.from_dict(data)
     db.session.add(bh)
