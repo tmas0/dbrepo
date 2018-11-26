@@ -1,7 +1,7 @@
 # dbrepo
 Database Repository Management Tool
 
-**A tool for managing a metainformation for databases
+**A tool for managing a metainformation for databases**
 
 DbRepo is a application developed with Flask.
 
@@ -21,7 +21,7 @@ source venv/bin/activate
 pip install -r requeriments.txt
 ```
 
-**Configuration
+**Configuration**
 
 ```
 export DATABASE_URL=postgresql://user:password@host/db
@@ -30,7 +30,7 @@ export PGMB_EDBUSER=user
 
 Install and execute gunicorn.
 
-***Example of dbrepo service
+***Example of dbrepo service***
 
 ```
 vi /lib/systemd/system/dbrepo.service
