@@ -23,7 +23,7 @@ from app.api import bp
 from app.api.auth import token_auth
 from app.api.errors import bad_request
 from app import db
-from app import logger
+import app
 import datetime
 
 
@@ -44,7 +44,7 @@ def new_backup_event():
     if not Database.query.filter_by(id=data['database_id']).first():
         return bad_request('please use a valid database identifier')
 
-    logger.info('Logging: %s' % data)
+    app.logger.info('Logging: %s' % data)
     bh = BackupHistory()
     bh.from_dict(data)
     db.session.add(bh)
